@@ -165,6 +165,7 @@ class ConfirmCourseView(mixins.CreateModelMixin, viewsets.GenericViewSet, mixins
                         mixins.ListModelMixin, mixins.UpdateModelMixin):
     queryset = ConfirmCourse.objects.all()
     serializer_class = ConfirmCourseSerializer
+    filter_fields = ('student_id',)
 
     @list_route()
     def review_project(self, request):
@@ -248,21 +249,20 @@ class ConfirmCourseView(mixins.CreateModelMixin, viewsets.GenericViewSet, mixins
         student_id = request.query_params.get('student_id')
         if not student_id:
             raise serializers.ValidationError('参数(student_id)不能为空')
-        result = self.queryset.filter(student=student_id).select_related('student').values('student__server',
-                                                                                           'modified_time').first()
+        result = self.queryset.filter(student=student_id).values('student__server', 'modified_time').first()
         return Response(result)
 
-    @list_route()
-    def get_confirm_course(self, request):
-        """根据学生id获取确认课程"""
-        student_id = request.query_params.get('student_id')
-        if not student_id:
-            raise serializers.ValidationError('参数(student_id)不能为空')
-        data = self.queryset.filter(student=student_id).values('id', 'course_code', 'course_name', 'school',
-                                                               'project_course__course__name',
-                                                               'project_course__address', 'project_course__start_time',
-                                                               'project_course__project__name')
-        return Response(data)
+    # @list_route()
+    # def get_confirm_course(self, request):
+    #     """根据学生id获取确认课程"""
+    #     student_id = request.query_params.get('student_id')
+    #     if not student_id:
+    #         raise serializers.ValidationError('参数(student_id)不能为空')
+    #     data = self.queryset.filter(student=student_id).values('id', 'course_code', 'course_name', 'school',
+    #                                                            'project_course__course__name',
+    #                                                            'project_course__address', 'project_course__start_time',
+    #                                                            'project_course__project__name')
+    #     return Response(data)
 
     @list_route()
     def get_select_student(self, request):
@@ -281,17 +281,17 @@ class ConfirmCourseView(mixins.CreateModelMixin, viewsets.GenericViewSet, mixins
         data['result'] = result
         return Response(data)
 
-    @list_route()
-    def query_performance(self, request):
-        """根据学生id查询成绩"""
-        student_id = request.query_params.get('student_id')
-        if not student_id:
-            raise serializers.ValidationError('参数(student_id)不能为空')
-        data = self.queryset.filter(student=student_id).values('course_code', 'course_name', 'school', 'score', 'grade',
-                                                               'score_enter_time', 'status', 'modified_time',
-                                                               'project_course__course__name',
-                                                               'project_course__project__name')
-        return Response(data)
+    # @list_route()
+    # def query_performance(self, request):
+    #     """根据学生id查询成绩"""
+    #     student_id = request.query_params.get('student_id')
+    #     if not student_id:
+    #         raise serializers.ValidationError('参数(student_id)不能为空')
+    #     data = self.queryset.filter(student=student_id).values('course_code', 'course_name', 'school', 'score', 'grade',
+    #                                                            'score_enter_time', 'status', 'modified_time',
+    #                                                            'project_course__course__name',
+    #                                                            'project_course__project__name')
+    #     return Response(data)
 
     @list_route()
     def confirm_performance(self, request):
@@ -306,28 +306,28 @@ class ConfirmCourseView(mixins.CreateModelMixin, viewsets.GenericViewSet, mixins
                                     student_id=request.user.id).values('status', 'modified_time').first()
         return Response(data)
 
-    @list_route()
-    def get_recipient(self, request):
-        """根据学生id查询快递"""
-        student_id = request.query_params.get('student_id')
-        if not student_id:
-            raise serializers.ValidationError('参数(student_id)不能为空')
-        data = self.queryset.filter(student=student_id).values('id', 'course_code', 'course_name', 'image',
-                                                               'convert_status', 'project_course__course_name',
-                                                               'school', 'project_course__project__name', 'score',
-                                                               'grade', 'recipient_number', 'sending_date')
-        return Response(data)
+    # @list_route()
+    # def get_recipient(self, request):
+    #     """根据学生id查询快递"""
+    #     student_id = request.query_params.get('student_id')
+    #     if not student_id:
+    #         raise serializers.ValidationError('参数(student_id)不能为空')
+    #     data = self.queryset.filter(student=student_id).values('id', 'course_code', 'course_name', 'image',
+    #                                                            'convert_status', 'project_course__course_name',
+    #                                                            'school', 'project_course__project__name', 'score',
+    #                                                            'grade', 'recipient_number', 'sending_date')
+    #     return Response(data)
 
-    @list_route()
-    def get_student_convert(self, request):
-        """根据学生id获取学分转换信息"""
-        student_id = request.query_params.get('student_id')
-        if not student_id:
-            raise serializers.ValidationError('参数(student_id)不能为空')
-        data = self.queryset.filter(student=student_id).values('course_code', 'convert_status', 'course_name', 'school',
-                                                               'image', 'recipient_number', 'sending_date',
-                                                               'project_course__project__name')
-        return Response(data)
+    # @list_route()
+    # def get_student_convert(self, request):
+    #     """根据学生id获取学分转换信息"""
+    #     student_id = request.query_params.get('student_id')
+    #     if not student_id:
+    #         raise serializers.ValidationError('参数(student_id)不能为空')
+    #     data = self.queryset.filter(student=student_id).values('course_code', 'convert_status', 'course_name', 'school',
+    #                                                            'image', 'recipient_number', 'sending_date',
+    #                                                            'project_course__project__name')
+    #     return Response(data)
 
     @list_route(['POST'])
     def upload_convert(self, request):
