@@ -187,6 +187,7 @@ class ConfirmCourseView(mixins.CreateModelMixin, viewsets.GenericViewSet, mixins
                     rev['project'].append(pro)
         return Response(reviewcourse)
 
+
     @list_route(['POST'])
     @transaction.atomic()
     def add_course(self, request):
